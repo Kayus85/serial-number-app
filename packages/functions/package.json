@@ -1,8 +1,8 @@
 {
-  "name": "@monorepo-template/functions",
+  "name": "@serial-number-app/functions",
   "version": "0.0.0",
   "dependencies": {
-    "@monorepo-template/core": "*",
+    "@serial-number-app/core": "*",
     "sst": "*"
   },
   "devDependencies": {
