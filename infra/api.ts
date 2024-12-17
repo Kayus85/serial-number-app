@@ -1,8 +1,10 @@
-import { bucket } from "./storage";
+import { secret } from "./secrets";
+import { rds } from "./database";
 
-export const api = new sst.aws.ApiGatewayV2("Api");
+export const api = new sst.aws.ApiGatewayV2("Api", {
+  link: [secret.LightspeedXApiToken, rds],
+});
 
 api.route("GET /", {
-  link: [bucket],
-  handler: "packages/functions/src/api.handler",
+  handler: "packages/functions/src/lightspeed-serial.main",
 });
