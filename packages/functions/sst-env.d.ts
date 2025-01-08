@@ -33,5 +33,10 @@ declare module "sst" {
       "type": "sst.aws.Postgres"
       "username": string
     }
+    "testRDS": {
+      "name": string
+      "type": "sst.aws.Function"
+      "url": string
+    }
   }
 }

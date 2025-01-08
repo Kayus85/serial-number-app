@@ -1,4 +1,4 @@
-export const vpc = new sst.aws.Vpc("databaseVpc");
+export const vpc = new sst.aws.Vpc("databaseVpc", { nat: "ec2" });
 export const rds = new sst.aws.Postgres("rdsPostgres", {
   vpc,
   dev: {
@@ -7,4 +7,11 @@ export const rds = new sst.aws.Postgres("rdsPostgres", {
     database: "local",
     port: 5432,
   },
+});
+
+new sst.aws.Function("testRDS", {
+  vpc,
+  url: true,
+  link: [rds],
+  handler: "packages/core/src/db.handler",
 });

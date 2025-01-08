@@ -48,12 +48,13 @@ export class XSeriesRequest {
       `Making axios request to ${this.ax.defaults.baseURL}/${endpoint}`,
     );
 
-    const res = await this.ax.request(requestConfig).catch((e) => {
+    try {
+      const res = await this.ax.request(requestConfig);
+      if (res) {
+        return res;
+      }
+    } catch (e: any) {
       console.error(e.message);
-    });
-
-    if (res) {
-      return { data: res.data, status: res.status, headers: res.headers };
     }
   }
   // Available methods:
