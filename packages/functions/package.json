@@ -7,6 +7,7 @@
     "sst": "*"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.137"
+    "@types/aws-lambda": "^8.10.137",
+    "@types/uuid": "^10.0.0"
   }
 }
