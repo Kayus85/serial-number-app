@@ -13,5 +13,5 @@ new sst.aws.Function("testRDS", {
   vpc,
   url: true,
   link: [rds],
-  handler: "packages/core/src/db.handler",
+  handler: "packages/core/src/dbsetup.handler",
 });

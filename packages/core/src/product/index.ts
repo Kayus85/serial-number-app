@@ -1,4 +1,4 @@
-import { Pool, PoolClient } from "pg";
+import { PoolClient } from "pg";
 import { Resource } from "sst";
 export * as Product from "./index";
 
@@ -17,33 +17,27 @@ export interface Info {
   updated_at: Date;
 }
 
-const pool = new Pool({
-  host: Resource.rdsPostgres.host,
-  database: Resource.rdsPostgres.database,
-  user: Resource.rdsPostgres.username,
-  password: Resource.rdsPostgres.password,
-  port: Resource.rdsPostgres.port,
-});
-
-export async function connectPgPool() {
-  const client = await pool.connect();
-  return client;
-}
-
-export async function releasePgPool(client: PoolClient) {
-  client.release();
-}
 export async function create(_product: Info, client: PoolClient) {
   const queryText = `INSERT INTO products (
     id, product_id, name, sku,
     supplier, price, cost, active,
     last_update_ls, last_version,
     created_at, updated_at
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`;
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+    ON CONFLICT (product_id) DO UPDATE SET
+    name = excluded.name,
+    sku = excluded.sku,
+    supplier = excluded.sku,
+    price = excluded.price,
+    cost = excluded.cost,
+    active = excluded.active,
+    last_update_ls = excluded.last_update_ls, 
+    last_version = excluded.last_version,
+    updated_at = excluded.updated_at
+    `;
 
   try {
     await client.query("BEGIN");
-
     await client.query(queryText, [
       _product.id,
       _product.product_id,
@@ -58,7 +52,6 @@ export async function create(_product: Info, client: PoolClient) {
       _product.created_at,
       _product.updated_at,
     ]);
-
     await client.query("COMMIT");
   } catch (error) {
     await client.query("ROLLBACK");
